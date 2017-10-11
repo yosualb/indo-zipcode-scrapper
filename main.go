@@ -95,7 +95,6 @@ var wg sync.WaitGroup
 func main() {
 	// Comment this if you already scrap province
 	// scrapProvince(100, 5)
-	// wg.Wait()
 
 	fmt.Println("Populate Province.")
 	listOfProvStr := populateProvince(100)
@@ -103,7 +102,6 @@ func main() {
 
 	// Comment this if you already scrap regency
 	// scrapRegency(100, 5, listOfProvStr)
-	// wg.Wait()
 
 	fmt.Println("Populate Regency.")
 	regProvMap := populateRegency(100, listOfProvStr)
@@ -111,7 +109,6 @@ func main() {
 
 	// Comment this if you already scrap village
 	// scrapVillage(100, 5)
-	// wg.Wait()
 
 	fmt.Println("Populate Village.")
 	zipCodes, listOfProv, regMap, disMap, vilMap, zipCodeMap := populateVillage(100, regProvMap)
@@ -155,6 +152,7 @@ func scrapProvince(numOfData int, numOfConc int) {
 			wg.Done()
 		}(i, numOfData)
 	}
+	wg.Wait()
 }
 
 func populateProvince(numOfData int) []string {
@@ -211,6 +209,7 @@ func scrapRegency(numOfData int, numOfConc int, listOfProvStr []string) {
 			}(i, numOfData, listOfProvStr[x])
 		}
 	}
+	wg.Wait()
 }
 
 func populateRegency(numOfData int, listOfProvStr []string) map[string]Province {
@@ -270,6 +269,7 @@ func scrapVillage(numOfData int, numOfConc int) {
 			wg.Done()
 		}(i, numOfData)
 	}
+	wg.Wait()
 }
 
 func populateVillage(numOfData int, regProvMap map[string]Province) ([]Province, []prov, map[string][]reg, map[string][]dis, map[string][]vil, map[string]string) {
@@ -350,6 +350,8 @@ func populateVillage(numOfData int, regProvMap map[string]Province) ([]Province,
 
 		provID++
 	}
+
+	fmt.Println(provID, regID, disID, vilID)
 
 	return zipCodes, listOfProv, mReg, mDis, mVil, mZipCode
 }
